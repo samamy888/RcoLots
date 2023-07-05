@@ -1,0 +1,166 @@
+﻿<div id="app">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col">
+                <el-collapse v-model="activeCollapse" accordion>
+                    <el-collapse-item accordion title="抽獎列表" name="1">
+                        <div>
+                            <el-input class="input-length" v-model="addMemberName" ></el-input>
+                            <el-button id="addMemberBtn">新增</el-button>
+                        </div>
+                        <el-table :data="memberList" empty-text="暫無數據" max-height="400" stripe border>
+                            <el-table-column prop="name" label="抽獎名單">
+                            </el-table-column>
+                            <el-table-column label="操作">
+                                <template slot-scope="scope">
+                                    <el-button size="mini"
+                                           type="danger"
+                                           @@click="removeMemberDialog(scope.row)">刪除</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-collapse-item>
+                </el-collapse>
+            </div>
+            <div class="col">
+                <div><img src="~/title.svg" alt="title"></div>
+                <div>
+                    抽獎數量
+                    <el-input-number v-model="winnerCount" controls-position="right" :min="1" :max="100" label="抽獎數"></el-input-number>
+                </div>
+                <el-button id="startDrawBtn">
+                    開抽
+                </el-button>
+                <div>
+                    持續開發中....
+                </div>
+                <div>
+                    先做功能
+                </div>
+                <div>
+                    美術之後再改
+                </div>
+            </div>
+            <div class="col">
+                <el-collapse v-model="activeCollapse" accordion>
+                    <el-collapse-item accordion title="中獎列表" name="1">
+                        <el-table :data="winnerMemberList" empty-text="尚未抽籤" max-height="400" stripe border>
+                            <el-table-column prop="name" label="中獎名單">
+                            </el-table-column>
+                        </el-table>
+                    </el-collapse-item>
+                </el-collapse>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    body {
+        background-image: url('https://rco.digeam.com/img/wiki/bg.png');
+        padding: 1.2rem;
+    }
+</style>
+
+@section Scripts{
+    <script>
+        let testList = [
+            { name: '甲' },
+            { name: '乙' },
+            { name: '丙' },
+            { name: '丁' },
+            { name: '戊' }
+        ];
+        let memberList = testList;
+        let winnerMemberList = [];
+        let winnerNumberList = [];
+        let winnerCount = 3;
+        const activeCollapse = '1';
+        const startDraw = () => {
+            if (vm.winnerCount > vm.memberList.length){
+                vm.showError("中獎數大於抽獎人數");
+                return;
+            }
+                
+            vm.winnerMemberList = [];
+            vm.winnerNumberList = [];
+            do {
+                let randomNumber = Math.floor(Math.random() * vm.memberList.length);
+                while (vm.winnerNumberList.includes(randomNumber)) {
+                    randomNumber = Math.floor(Math.random() * vm.memberList.length);
+                }
+                let winner = vm.memberList[randomNumber];
+                vm.winnerMemberList.push(winner);
+                vm.winnerNumberList.push(randomNumber);
+            } while (vm.winnerCount != vm.winnerNumberList.length)
+            vm.showSuccess("抽獎結束~")
+        }
+        const methods = {
+            removeMemberDialog(data) {
+                this.$confirm(`確定刪除 : ${data.name}?`, '刪除提示', {
+                    confirmButtonText: '確定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    vm.removeMember(data);
+                });
+            },
+            getMember() {
+                axios.get('/Member').then(function ({ data }) {
+                    vm.memberList = data;
+                }, function (ex) {
+                    vm.showError(ex);
+                });
+            },
+            addMember() {
+                axios.post(`/Member/${vm.addMemberName}`)
+                    .then(function () {
+                        vm.getMember();
+                        vm.showSuccess('新增成功');
+                    }, function (ex) {
+                        vm.showError(ex);
+                    });
+            },
+            removeMember({ id }) {
+                axios.delete(`/Member/${id}`)
+                .then(function () {
+                    vm.getMember();
+                    vm.showSuccess('刪除成功');
+                }, function (ex) {
+                    vm.showError(ex);
+                });
+            },
+            showSuccess(message) {
+                this.$message({
+                    message: message,
+                    type: 'success'
+                });
+            },
+            showError(message) {
+                this.$message.error(message);
+            },
+        }
+        const mounted = function () {
+            $('#startDrawBtn').click(startDraw);
+            $('#addMemberBtn').click(this.addMember);
+            this.getMember();
+        }
+    </script>
+    <script>
+        const vueData = {
+            addMemberName:"",
+            memberList: memberList,
+            winnerMemberList: winnerMemberList,
+            winnerCount: winnerCount,
+            activeCollapse : activeCollapse,
+        }
+        const vue = {
+            el: '#app',
+            data: vueData,
+            methods: methods,
+            mounted: mounted,
+        }
+        const vm = new Vue(vue)
+    </script>
+}
