@@ -1,64 +1,65 @@
-﻿<div id="app">
-    <div class="container text-center">
-        <div><img width="50%" src="~/title.svg" alt="title"></div>
-        <div class="row">
-            <div class="col">
-                <el-collapse v-model="activeMemberCollapse" accordion>
-                    <el-collapse-item accordion title="抽獎列表" name="1">
-                        <div class="row p-2">
-                            <div class="col">
-                                <el-input class="input-length" v-model="addMemberName" placeholder="新增名稱"></el-input>
-                            </div>
-                            <div class="col">
-                                <el-button id="addMemberBtn">新增</el-button>
-                            </div>
-                        </div>
-                        <el-table :data="memberList" empty-text="暫無數據" max-height="400" stripe border>
-                            <el-table-column prop="name" label="抽獎名單">
-                            </el-table-column>
-                            <el-table-column label="操作">
-                                <template slot-scope="scope">
-                                    <el-button size="mini"
-                                               type="danger"
-                                               @@click="removeMemberDialog(scope.row)">刪除</el-button>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                    </el-collapse-item>
-                </el-collapse>
-            </div>
-            <div class="col">
-                <div class="pt-5">
-                    抽獎數量
-                    <el-input-number v-model="winnerCount" controls-position="right" :min="1" :max="100" label="抽獎數"></el-input-number>
-                </div>
-                <div class="pt-5">
-                    <el-button id="startDrawBtn">
-                        開抽
-                    </el-button>
-                </div>
-            </div>
-            <div class="col">
-                <el-collapse v-model="activeWinnerCollapse" accordion>
-                    <el-collapse-item accordion title="中獎列表" name="1">
-                        <el-table :data="winnerMemberList" empty-text="尚未抽籤" max-height="400" stripe border>
-                            <el-table-column prop="name" label="中獎名單">
-                            </el-table-column>
-                        </el-table>
-                    </el-collapse-item>
-                </el-collapse>
-            </div>
-        </div>
+﻿<link href="css/site.css" rel="stylesheet"> 
+<link href="css/aos.css" rel="stylesheet"> 
 
+<div id="app">
+    <div class="container text-center">
+        <div class="title-wrapper">
+            <img class="main-title" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1000" data-aos-once=“true” src="img/title.svg" alt="title">
+            <a class="scroll-down-wrapper" href="#draw-sec">
+                <img class="scroll-down" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1500" data-aos-once="true" src="img/scroll.svg" alt="scrolldown">
+            </a>
+        </div>
+        <div class="waves-wrapper"></div>
+        <!-- 抽獎列表 Starts-->
+        <div id="draw-sec" class="draw-sec container mx-auto p-5 mb-5" >
+            <div class="row">
+                <div class="add-sec col-lg-5 col-12 px-0 mb-3">
+                    <span class="sub-title">新增名稱</span>
+                    <div class="input-sec">
+                        <el-input class="input-length" v-model="addMemberName" placeholder="新增名稱"></el-input>
+                        <el-button id="addMemberBtn">新 增</el-button>
+                    </div>
+                </div>
+                <div class="amount-sec col-lg-4 offset-lg-1 col-12 px-0">
+                    <span class="sub-title">抽獎數</span>
+                    <el-input-number v-model="winnerCount" controls-position="right" :min="1" :max="100" label="抽獎數" placeholder="抽獎數"></el-input-number>
+                </div>
+                <div class="nominee-sec col-12 px-0 mt-3 mb-5">
+                    <el-table :data="memberList" empty-text="暫無數據" max-height="400" stripe>
+                        <el-table-column prop="name" label="抽獎名單">
+                        </el-table-column>
+                        <el-table-column label="操作">
+                            <template slot-scope="scope">
+                                <el-button size="mini"
+                                            type="danger"
+                                            @@click="removeMemberDialog(scope.row)">刪除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </div>
+            <!-- 開獎按鈕 Starts-->
+                <div class="draw-btn-wrapper">
+                    <el-button id="startDrawBtn">GO</el-button>
+                </div>
+            <!-- 開獎按鈕 Ends-->
+        </div>
+        <!-- 抽獎列表 Ends-->
+
+        <!-- 開獎列表 Starts-->
+        <div class="reveal-sec container mx-auto p-5 mb-5" >
+            <div class="row">
+                <div class="col-12 px-0 reveal-table-wrapper">
+                    <el-table :data="winnerMemberList" empty-text="尚未抽籤" max-height="400" stripe border>
+                        <el-table-column prop="name" label="中獎名單">
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </div>  
+        </div>        
+        <!-- 開獎列表 Ends-->
     </div>
 </div>
-
-<style>
-    body {
-        background-image: url('https://rco.digeam.com/img/wiki/bg.png');
-        padding: 1.2rem;
-    }
-</style>
 
 @section Scripts{
     <script>
@@ -161,5 +162,10 @@
             mounted: mounted,
         }
         const vm = new Vue(vue)
+    </script>
+    <!-- initialize aos -->
+    <script src="js/aos.js"></script>
+    <script>
+        AOS.init();
     </script>
 }
