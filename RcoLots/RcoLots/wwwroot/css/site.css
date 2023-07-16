@@ -35,6 +35,9 @@ body {
     -ms-transition: all .3s ease-in-out;
     -o-transition: all .3s ease-in-out;
 }
+.el-table{
+    max-height: none !important;
+}
 .footer{
     padding: 0rem 1rem;
     text-align: center;
