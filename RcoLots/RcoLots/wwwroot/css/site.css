@@ -246,9 +246,8 @@ body {
     line-height: 60px;
 }
 .reveal-table-wrapper{
-    min-height: 300px;
     max-height: 300px;
-    overflow: scroll;
+    overflow: auto;
 }
 /* rwd */
 @media (max-width: 768px) {

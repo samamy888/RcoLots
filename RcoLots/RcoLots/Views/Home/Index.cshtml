@@ -25,7 +25,7 @@
                     <el-input-number v-model="winnerCount" controls-position="right" :min="1" :max="100" label="抽獎數" placeholder="抽獎數"></el-input-number>
                 </div>
                 <div class="nominee-sec col-12 px-0 mt-3 mb-5">
-                    <el-table :data="memberList" empty-text="暫無數據" max-height="400" stripe>
+                    <el-table :data="memberList" empty-text="暫無數據" stripe>
                         <el-table-column prop="name" label="抽獎名單">
                         </el-table-column>
                         <el-table-column label="操作">
@@ -50,7 +50,7 @@
         <div class="reveal-sec container mx-auto p-5 mb-5" data-aos="fade-down" data-aos-easing="linear" data-aos-duration="1000" data-aos-once=“true”>
             <div class="row">
                 <div class="col-12 px-0 reveal-table-wrapper">
-                    <el-table :data="winnerMemberList" empty-text="尚未抽籤" max-height="400" stripe border>
+                    <el-table :data="winnerMemberList" empty-text="尚未抽籤" stripe border>
                         <el-table-column prop="name" label="中獎名單">
                         </el-table-column>
                     </el-table>
